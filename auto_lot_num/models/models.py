@@ -6,6 +6,10 @@ from odoo.exceptions import UserError
 
 class InheritProductProduct(models.Model):
     _inherit = 'product.product'
+    _sql_constraints = [
+        ('prefix', 'UNIQUE (prefix)',
+         'Prefix Must Be Unique.'),
+    ]
 
     prefix = fields.Char("Prefix")
 
@@ -15,23 +19,23 @@ class InheritProductTemplate(models.Model):
 
     prefix = fields.Char("Prefix")
 
-    @api.model
-    def create(self, vals):
-        res = super(InheritProductTemplate, self).create(vals)
-        product_product = self.env['product.product'].search([('product_tmpl_id', '=', res.id)])
-        if product_product:
-            for rec in product_product:
-                rec.prefix = res.prefix
-        return res
-
-    def write(self, vals):
-        res = super(InheritProductTemplate, self).write(vals)
-        if vals.get('prefix'):
-            product_product = self.env['product.product'].search([('product_tmpl_id', '=', self.id)])
-            if product_product:
-                for rec in product_product:
-                    rec.prefix = vals.get('prefix')
-        return res
+    # @api.model
+    # def create(self, vals):
+    #     res = super(InheritProductTemplate, self).create(vals)
+    #     product_product = self.env['product.product'].search([('product_tmpl_id', '=', res.id)])
+    #     if product_product:
+    #         for rec in product_product:
+    #             rec.prefix = res.prefix
+    #     return res
+    #
+    # def write(self, vals):
+    #     res = super(InheritProductTemplate, self).write(vals)
+    #     if vals.get('prefix'):
+    #         product_product = self.env['product.product'].search([('product_tmpl_id', '=', self.id)])
+    #         if product_product:
+    #             for rec in product_product:
+    #                 rec.prefix = vals.get('prefix')
+    #     return res
 
 
 class InheritStockMove(models.Model):
